@@ -41,7 +41,11 @@ class Question {
   bool get answered => userAnswer != null;
 
   RichText getRepresentation(double fontSize) {
-    final replacement = userAnswer == null ? hole : userAnswer.toString();
+    final replacement = userAnswer == null
+        ? hole
+        : userAnswer == expectedAnswer
+            ? userAnswer.toString()
+            : '$userAnswer ($expectedAnswer)';
     final replacementColor = userAnswer == null
         ? Colors.blue
         : userAnswer == expectedAnswer
