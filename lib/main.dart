@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hurry_math/screens/exercise.dart';
+import 'package:hurry_math/screens/home.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -18,9 +18,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        ),
         useMaterial3: true,
       ),
-      home: const ExerciseScreen(),
+      home: const HomeScreen(),
     );
   }
 }

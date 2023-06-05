@@ -1,3 +1,7 @@
+import 'dart:math';
+
+final _randomizer = Random();
+
 const hole = '___';
 
 enum Operator { add, sub, mul, div }
@@ -58,3 +62,107 @@ class Question {
   final Operator operator;
   final int expectedAnswer;
 }
+
+class Operation {
+  Operation({
+    required this.operand_1,
+    required this.operand_2,
+    required this.result,
+    required this.operator,
+  });
+
+  factory Operation.randomAddition() {
+    final operand_1 = _randomOperand();
+    final operand_2 = _randomOperand();
+    final result = operand_1 + operand_2;
+    const operator = Operator.add;
+
+    return Operation(
+      operand_1: operand_1,
+      operand_2: operand_2,
+      result: result,
+      operator: operator,
+    );
+  }
+
+  factory Operation.randomSubstraction() {
+    final reversedOperation = Operation.randomAddition();
+    final reversedOrder = _randomizer.nextBool();
+    if (reversedOrder) {
+      final operand_1 = reversedOperation.result;
+      final operand_2 = reversedOperation.operand_2;
+      final result = reversedOperation.operand_1;
+      const operator = Operator.sub;
+
+      return Operation(
+        operand_1: operand_1,
+        operand_2: operand_2,
+        result: result,
+        operator: operator,
+      );
+    } else {
+      final operand_1 = reversedOperation.result;
+      final operand_2 = reversedOperation.operand_1;
+      final result = reversedOperation.operand_2;
+      const operator = Operator.sub;
+
+      return Operation(
+        operand_1: operand_1,
+        operand_2: operand_2,
+        result: result,
+        operator: operator,
+      );
+    }
+  }
+
+  factory Operation.randomMultiplication() {
+    final operand_1 = _randomOperand();
+    final operand_2 = _randomOperand();
+    final result = operand_1 * operand_2;
+    const operator = Operator.mul;
+
+    return Operation(
+      operand_1: operand_1,
+      operand_2: operand_2,
+      result: result,
+      operator: operator,
+    );
+  }
+
+  factory Operation.randomDivision() {
+    final reversedOperation = Operation.randomMultiplication();
+    final reversedOrder = _randomizer.nextBool();
+    if (reversedOrder) {
+      final operand_1 = reversedOperation.result;
+      final operand_2 = reversedOperation.operand_2;
+      final result = reversedOperation.operand_1;
+      const operator = Operator.div;
+
+      return Operation(
+        operand_1: operand_1,
+        operand_2: operand_2,
+        result: result,
+        operator: operator,
+      );
+    } else {
+      final operand_1 = reversedOperation.result;
+      final operand_2 = reversedOperation.operand_1;
+      final result = reversedOperation.operand_2;
+      const operator = Operator.div;
+
+      return Operation(
+        operand_1: operand_1,
+        operand_2: operand_2,
+        result: result,
+        operator: operator,
+      );
+    }
+  }
+
+  final int operand_1;
+  final int operand_2;
+  final int result;
+  final Operator operator;
+}
+
+int _randomOperand() => _randomizer.nextInt(9) + 1;
