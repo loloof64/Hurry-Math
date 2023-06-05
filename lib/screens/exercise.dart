@@ -69,7 +69,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
+                          child: TextFormField(
+                            onEditingComplete: _answerQuestion,
                             controller: _answerController,
                             keyboardType: TextInputType.number,
                             autocorrect: false,
