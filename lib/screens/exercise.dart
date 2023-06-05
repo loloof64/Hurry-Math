@@ -26,18 +26,20 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
             ? const Center(
                 child: Text('No exercise loaded yet.'),
               )
-            : ListView.builder(
-                itemCount: exercise.questionsList.length,
-                itemBuilder: (ctx, index) {
-                  return LayoutBuilder(builder: (ctx2, constraints) {
-                    return Text(
-                      exercise.questionsList[index].representation,
-                      style: TextStyle(
-                        fontSize: constraints.biggest.width * 0.12,
-                      ),
-                    );
-                  });
-                },
+            : Wrap(
+                children: [
+                  for (final question in exercise.questionsList)
+                    LayoutBuilder(
+                      builder: (ctx2, constraints) {
+                        return Text(
+                          question.representation,
+                          style: TextStyle(
+                            fontSize: constraints.biggest.width * 0.12,
+                          ),
+                        );
+                      },
+                    ),
+                ],
               ),
       ),
     );
