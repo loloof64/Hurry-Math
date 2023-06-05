@@ -31,11 +31,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                   for (final question in exercise.questionsList)
                     LayoutBuilder(
                       builder: (ctx2, constraints) {
-                        return Text(
-                          question.representation,
-                          style: TextStyle(
-                            fontSize: constraints.biggest.width * 0.12,
-                          ),
+                        return question.getRepresentation(
+                          constraints.biggest.width * 0.12,
                         );
                       },
                     ),

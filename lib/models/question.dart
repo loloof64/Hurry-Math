@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 final _randomizer = Random();
 
 const hole = '___';
@@ -32,17 +34,121 @@ class Question {
     }
   }
 
-  String get representation {
+  void seUserAnswer(int answer) {
+    userAnswer = answer;
+  }
+
+  RichText getRepresentation(double fontSize) {
+    final replacement = userAnswer == null ? hole : userAnswer.toString();
+    final replacementColor = userAnswer == null
+        ? Colors.blue
+        : userAnswer == expectedAnswer
+            ? Colors.green
+            : Colors.red;
     if (result == null && operand_1 != null && operand_2 != null) {
-      return '$operand_1 ${operatorsLabels[operator]} $operand_2 = $hole';
+      return _getResultMaskedRepresentation(
+        fontSize,
+        replacement,
+        replacementColor,
+      );
     }
     if (operand_1 == null && operand_2 != null && result != null) {
-      return '$hole ${operatorsLabels[operator]} $operand_2 = $result';
+      return _getFirstOperandMaskedRepresentation(
+        fontSize,
+        replacement,
+        replacementColor,
+      );
     }
     if (operand_2 == null && operand_1 != null && result != null) {
-      return '$operand_1 ${operatorsLabels[operator]} $hole = $result';
+      return _getSecondOperandMaskedRepresentation(
+        fontSize,
+        replacement,
+        replacementColor,
+      );
     }
     throw Exception('Should never reach this line !');
+  }
+
+  RichText _getResultMaskedRepresentation(
+    double fontSize,
+    String replacement,
+    Color replacementColor,
+  ) {
+    return RichText(
+      text: TextSpan(
+        text: '$operand_1 ${operatorsLabels[operator]} $operand_2 = ',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: fontSize,
+        ),
+        children: [
+          TextSpan(
+            text: replacement,
+            style: TextStyle(
+              color: replacementColor,
+              fontSize: fontSize,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  RichText _getFirstOperandMaskedRepresentation(
+    double fontSize,
+    String replacement,
+    Color replacementColor,
+  ) {
+    return RichText(
+      text: TextSpan(
+        text: replacement,
+        style: TextStyle(
+          color: replacementColor,
+          fontSize: fontSize,
+        ),
+        children: [
+          TextSpan(
+            text: ' ${operatorsLabels[operator]} $operand_2 = $result',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: fontSize,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  RichText _getSecondOperandMaskedRepresentation(
+    double fontSize,
+    String replacement,
+    Color replacementColor,
+  ) {
+    return RichText(
+      text: TextSpan(
+        text: '$operand_1 ${operatorsLabels[operator]} ',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: fontSize,
+        ),
+        children: [
+          TextSpan(
+            text: replacement,
+            style: TextStyle(
+              color: replacementColor,
+              fontSize: fontSize,
+            ),
+          ),
+          TextSpan(
+            text: ' = $result',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: fontSize,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -61,6 +167,7 @@ class Question {
   final int? result;
   final Operator operator;
   final int expectedAnswer;
+  int? userAnswer;
 }
 
 class Operation {
