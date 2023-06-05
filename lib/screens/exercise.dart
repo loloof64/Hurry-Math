@@ -17,6 +17,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Exercise'),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

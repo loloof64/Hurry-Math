@@ -18,10 +18,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.green,
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        ),
         useMaterial3: true,
       ),
       home: const HomeScreen(),
