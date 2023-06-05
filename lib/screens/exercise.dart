@@ -80,11 +80,6 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                             ),
                           ),
                         ),
-                        TextButton.icon(
-                          onPressed: _answerQuestion,
-                          icon: const Icon(Icons.send),
-                          label: const Text('Answer'),
-                        ),
                       ],
                     ),
                   )
