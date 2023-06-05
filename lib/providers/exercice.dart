@@ -7,6 +7,10 @@ class ExerciceNotifier extends StateNotifier<Exercise?> {
   void loadExercise(Exercise exercise) {
     state = exercise;
   }
+
+  void answerCurrentQuestion(int userAnswer) {
+    state = state?.answerCurrentQuestion(userAnswer);
+  }
 }
 
 final exerciseProvider = StateNotifierProvider<ExerciceNotifier, Exercise?>(

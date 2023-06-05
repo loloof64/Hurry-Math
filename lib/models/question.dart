@@ -38,6 +38,8 @@ class Question {
     userAnswer = answer;
   }
 
+  bool get answered => userAnswer != null;
+
   RichText getRepresentation(double fontSize) {
     final replacement = userAnswer == null ? hole : userAnswer.toString();
     final replacementColor = userAnswer == null
