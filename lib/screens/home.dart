@@ -28,14 +28,17 @@ class HomeScreen extends ConsumerWidget {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Center(
-          child: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () => _gotoSimpleExercise(context, ref),
-            child: const Text('New simple exercise'),
-          ),
-        ],
-      )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => _gotoSimpleExercise(context, ref),
+              child: const Text('New simple exercise'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
