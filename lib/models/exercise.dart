@@ -16,6 +16,10 @@ class Exercise {
   int get correctlyAnsweredCount =>
       questionsList.where((question) => question.isCorrectedAnswered).length;
 
+  int get score {
+    return correctlyAnsweredCount * 100;
+  }
+
   Exercise answerCurrentQuestion(int userAnswer) {
     final interestIndex = currentIndex;
     if (interestIndex == -1) return this;

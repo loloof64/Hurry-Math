@@ -11,7 +11,7 @@ class ScoreScreen extends ConsumerWidget {
 
     final correctAnswersCount = exercise.correctlyAnsweredCount;
     final questionsCount = exercise.questionsList.length;
-    final points = 0;
+    final points = exercise.score;
     final duration = Duration();
 
     const commonTextStyle = TextStyle(fontSize: 22.0);
