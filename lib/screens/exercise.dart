@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hurry_math/providers/exercice.dart';
@@ -36,6 +38,20 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
   final ScrollOffsetListener _scrollOffsetListener =
       ScrollOffsetListener.create();
 
+  var _decisecondsSpent = 0;
+
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _decisecondsSpent++;
+      });
+    });
+  }
+
   void _answerQuestion(String text) {
     final enteredAnswer = int.tryParse(text);
     final currentQuestionIndex = ref.read(exerciseProvider)!.currentIndex;
@@ -44,6 +60,12 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
       ref.read(exerciseProvider.notifier).answerCurrentQuestion(enteredAnswer);
       final isOver = ref.read(exerciseProvider)!.isOver;
       if (isOver) {
+        setState(() {
+          _timer.cancel();
+        });
+        ref
+            .read(exerciseProvider.notifier)
+            .setSpentTimeInDeciSeconds(_decisecondsSpent);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (ctx) => const ScoreScreen(),
@@ -64,6 +86,8 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
   @override
   Widget build(BuildContext context) {
     final exercise = ref.watch(exerciseProvider);
+    final timeString =
+        '${Duration(milliseconds: 100 * _decisecondsSpent).inSeconds} s';
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -73,6 +97,10 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
             )
           : Column(
               children: [
+                Flexible(
+                  flex: 1,
+                  child: Text(timeString),
+                ),
                 Flexible(
                   flex: 9,
                   child: ScrollablePositionedList.builder(

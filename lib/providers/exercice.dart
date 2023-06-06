@@ -9,7 +9,11 @@ class ExerciceNotifier extends StateNotifier<Exercise?> {
   }
 
   void answerCurrentQuestion(int userAnswer) {
-    state = state?.answerCurrentQuestion(userAnswer);
+    state = state?.copyAnsweringCurrentQuestion(userAnswer);
+  }
+
+  void setSpentTimeInDeciSeconds(int timeSpentDeciSeconds) {
+    state = state?.copyWithSpentTimeInDeciSeconds(timeSpentDeciSeconds);
   }
 
   bool get isOver => state?.isOver ?? true;

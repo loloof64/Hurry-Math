@@ -4,9 +4,12 @@ import 'package:hurry_math/models/question.dart';
 class Exercise {
   Exercise({
     required this.questionsList,
+    this.timeSpentDeciSeconds = 0,
   });
 
-  Exercise.newSimpleExercise() : questionsList = generateSimpleExercise();
+  Exercise.newSimpleExercise()
+      : questionsList = generateSimpleExercise(),
+        timeSpentDeciSeconds = 0;
 
   bool get isOver => currentIndex >= questionsList.length || currentIndex == -1;
 
@@ -17,10 +20,24 @@ class Exercise {
       questionsList.where((question) => question.isCorrectedAnswered).length;
 
   int get score {
-    return correctlyAnsweredCount * 100;
+    return correctlyAnsweredCount * 100 - timeSpentDeciSeconds;
   }
 
-  Exercise answerCurrentQuestion(int userAnswer) {
+  Duration get spentTime => Duration(milliseconds: timeSpentDeciSeconds * 100);
+
+  String get spentTimeString {
+    return spentTime.inSeconds > 60
+        ? "${spentTime.inMinutes.remainder(60)}m and ${(spentTime.inSeconds.remainder(60))}s"
+        : "${spentTime.inSeconds.remainder(60)}s";
+  }
+
+  Exercise copyWithSpentTimeInDeciSeconds(int timeSpentDeciSeconds) {
+    return Exercise(
+        questionsList: questionsList,
+        timeSpentDeciSeconds: timeSpentDeciSeconds);
+  }
+
+  Exercise copyAnsweringCurrentQuestion(int userAnswer) {
     final interestIndex = currentIndex;
     if (interestIndex == -1) return this;
 
@@ -40,4 +57,5 @@ class Exercise {
   }
 
   final List<Question> questionsList;
+  final int timeSpentDeciSeconds;
 }

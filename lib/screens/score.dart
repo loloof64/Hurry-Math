@@ -12,7 +12,7 @@ class ScoreScreen extends ConsumerWidget {
     final correctAnswersCount = exercise.correctlyAnsweredCount;
     final questionsCount = exercise.questionsList.length;
     final points = exercise.score;
-    final duration = Duration();
+    final duration = exercise.spentTimeString;
 
     const commonTextStyle = TextStyle(fontSize: 22.0);
 
@@ -32,7 +32,7 @@ class ScoreScreen extends ConsumerWidget {
               style: commonTextStyle,
             ),
             Text(
-              'You took ${duration.inSeconds} s.',
+              'You took $duration.',
               style: commonTextStyle,
             ),
             Text(
