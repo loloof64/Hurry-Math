@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hurry_math/models/question.dart';
 import 'package:hurry_math/providers/exercice.dart';
 
 class ExerciseScreen extends StatelessWidget {
@@ -27,20 +26,29 @@ class _ExerciceWidget extends ConsumerStatefulWidget {
 }
 
 class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
-  void _answerQuestion(String text) {
+  final _scrollController = ScrollController();
+
+  void _answerQuestion(String text, double fontSize) {
     final enteredAnswer = int.tryParse(text);
+    final offsetPerQuestion = fontSize + 2;
+    final currentQuestionIndex = ref.read(exerciseProvider)!.currentIndex;
     final isANumber = enteredAnswer != null;
     if (isANumber) {
       ref.read(exerciseProvider.notifier).answerCurrentQuestion(enteredAnswer);
-    } else {}
+      _scrollController.animateTo(
+        offsetPerQuestion * currentQuestionIndex,
+        duration: const Duration(
+          milliseconds: 150,
+        ),
+        curve: Curves.fastOutSlowIn,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final exercise = ref.watch(exerciseProvider);
-    final currentQuestionIndex = exercise?.currentIndex;
-
-    const lineSpacing = 100.0;
+    final fontSize = MediaQuery.of(context).size.width * 0.12;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -53,33 +61,29 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
                 Flexible(
                   flex: 9,
                   child: ListView.builder(
+                    controller: _scrollController,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: exercise.questionsList.length,
                     itemBuilder: (ctx, index) {
                       final question = exercise.questionsList[index];
-                      return LayoutBuilder(
-                        builder: (ctx2, constraints) {
-                          final fontSize = constraints.biggest.width * 0.12;
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: _QuestionMarker(
-                                  questionIndex: index,
-                                  fontSize: fontSize,
-                                ),
-                              ),
-                              Flexible(
-                                flex: 3,
-                                child: question.getRepresentation(
-                                  fontSize,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: _QuestionMarker(
+                              questionIndex: index,
+                              fontSize: fontSize,
+                            ),
+                          ),
+                          Flexible(
+                            flex: 3,
+                            child: question.getRepresentation(
+                              fontSize,
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -87,7 +91,7 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
                 Flexible(
                   flex: 1,
                   child: _AnswerInput(
-                    onAnswerQuestion: _answerQuestion,
+                    onAnswerQuestion: (text) => _answerQuestion(text, fontSize),
                   ),
                 )
               ],
