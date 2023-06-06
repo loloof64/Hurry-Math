@@ -52,6 +52,11 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
     });
   }
 
+  void _handleExitPage() {
+    print('exiting page');
+    _timer.cancel();
+  }
+
   void _answerQuestion(String text) {
     final enteredAnswer = int.tryParse(text);
     final currentQuestionIndex = ref.read(exerciseProvider)!.currentIndex;
@@ -91,70 +96,76 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
         ? "${spentTime.inMinutes.remainder(60)}m and ${(spentTime.inSeconds.remainder(60))}s"
         : "${spentTime.inSeconds.remainder(60)}s";
 
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: exercise == null
-            ? const Center(
-                child: Text('No exercise loaded yet.'),
-              )
-            : LayoutBuilder(builder: (ctx, constraints) {
-                final fontSize = constraints.biggest.width * 0.12;
-                return Column(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Text(
-                        timeString,
-                        style: TextStyle(
-                          fontSize: fontSize * 0.25,
+    return WillPopScope(
+      onWillPop: () {
+        _handleExitPage();
+        return Future.value(true);
+      },
+      child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: exercise == null
+              ? const Center(
+                  child: Text('No exercise loaded yet.'),
+                )
+              : LayoutBuilder(builder: (ctx, constraints) {
+                  final fontSize = constraints.biggest.width * 0.12;
+                  return Column(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Text(
+                          timeString,
+                          style: TextStyle(
+                            fontSize: fontSize * 0.25,
+                          ),
                         ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 9,
-                      child: ScrollablePositionedList.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemScrollController: _itemScrollController,
-                        scrollOffsetController: _scrollOffsetController,
-                        itemPositionsListener: _itemPositionsListener,
-                        scrollOffsetListener: _scrollOffsetListener,
-                        itemCount: exercise.questionsList.length,
-                        itemBuilder: (ctx, index) {
-                          final question = exercise.questionsList[index];
-                          // return LayoutBuilder(builder: (ctx, constraints) {
+                      Flexible(
+                        flex: 9,
+                        child: ScrollablePositionedList.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemScrollController: _itemScrollController,
+                          scrollOffsetController: _scrollOffsetController,
+                          itemPositionsListener: _itemPositionsListener,
+                          scrollOffsetListener: _scrollOffsetListener,
+                          itemCount: exercise.questionsList.length,
+                          itemBuilder: (ctx, index) {
+                            final question = exercise.questionsList[index];
+                            // return LayoutBuilder(builder: (ctx, constraints) {
 
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: _QuestionMarker(
-                                  questionIndex: index,
-                                  fontSize: fontSize,
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: _QuestionMarker(
+                                    questionIndex: index,
+                                    fontSize: fontSize,
+                                  ),
                                 ),
-                              ),
-                              Flexible(
-                                flex: 3,
-                                child: question.getRepresentation(
-                                  fontSize,
+                                Flexible(
+                                  flex: 3,
+                                  child: question.getRepresentation(
+                                    fontSize,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
-                          //  });
-                        },
+                              ],
+                            );
+                            //  });
+                          },
+                        ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: _AnswerInput(
-                        onAnswerQuestion: (text) => _answerQuestion(text),
-                      ),
-                    )
-                  ],
-                );
-              }));
+                      Flexible(
+                        flex: 1,
+                        child: _AnswerInput(
+                          onAnswerQuestion: (text) => _answerQuestion(text),
+                        ),
+                      )
+                    ],
+                  );
+                })),
+    );
   }
 }
 
