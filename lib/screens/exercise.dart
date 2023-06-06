@@ -106,7 +106,7 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
                       child: Text(
                         timeString,
                         style: TextStyle(
-                          fontSize: fontSize * 0.4,
+                          fontSize: fontSize * 0.25,
                         ),
                       ),
                     ),
