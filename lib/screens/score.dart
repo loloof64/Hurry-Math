@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hurry_math/models/exercise.dart';
 import 'package:hurry_math/providers/exercice.dart';
 
 class ScoreScreen extends ConsumerWidget {
@@ -14,8 +15,6 @@ class ScoreScreen extends ConsumerWidget {
     final points = exercise.score;
     final duration = exercise.spentTimeString;
 
-    const commonTextStyle = TextStyle(fontSize: 22.0);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your result'),
@@ -27,20 +26,101 @@ class ScoreScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'You solved $correctAnswersCount out of $questionsCount.',
-              style: commonTextStyle,
+            Flexible(
+              flex: 2,
+              child: ScoreText(
+                correctAnswersCount: correctAnswersCount,
+                questionsCount: questionsCount,
+                points: points,
+                duration: duration,
+              ),
             ),
-            Text(
-              'You took $duration.',
-              style: commonTextStyle,
+            Flexible(
+              flex: 6,
+              child: QuestionsSummary(
+                exercise: exercise,
+              ),
             ),
-            Text(
-              'You got a score of $points.',
-              style: commonTextStyle,
-            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ScoreText extends StatelessWidget {
+  const ScoreText({
+    Key? key,
+    required this.correctAnswersCount,
+    required this.questionsCount,
+    required this.points,
+    required this.duration,
+  }) : super(key: key);
+
+  final int correctAnswersCount;
+  final int questionsCount;
+  final int points;
+  final String duration;
+
+  @override
+  Widget build(BuildContext context) {
+    final commonTextStyle = TextStyle(
+      fontSize: MediaQuery.of(context).size.width * 0.011,
+    );
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Statistics',
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.05,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'You solved $correctAnswersCount out of $questionsCount.',
+          style: commonTextStyle,
+        ),
+        Text(
+          'You took $duration.',
+          style: commonTextStyle,
+        ),
+        Text(
+          'You got a score of $points.',
+          style: commonTextStyle,
+        )
+      ],
+    );
+  }
+}
+
+class QuestionsSummary extends StatelessWidget {
+  const QuestionsSummary({
+    Key? key,
+    required this.exercise,
+  }) : super(key: key);
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Text(
+            'Questions',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: MediaQuery.of(context).size.width * 0.05,
+            ),
+          ),
+          for (final question in exercise.questionsList)
+            question.getRepresentation(
+              MediaQuery.of(context).size.width * 0.02,
+            )
+        ],
       ),
     );
   }
