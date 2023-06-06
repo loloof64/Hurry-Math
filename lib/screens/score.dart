@@ -106,22 +106,29 @@ class QuestionsSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text(
-            'Questions',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: MediaQuery.of(context).size.width * 0.05,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Questions',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: MediaQuery.of(context).size.width * 0.05,
           ),
-          for (final question in exercise.questionsList)
-            question.getRepresentation(
-              MediaQuery.of(context).size.width * 0.02,
-            )
-        ],
-      ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: exercise.questionsList.length,
+            itemBuilder: (ctx, index) {
+              return Center(
+                child: exercise.questionsList[index].getRepresentation(
+                  MediaQuery.of(context).size.width * 0.02,
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
