@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:hurry_math/algorithms/simple_exercise_generator.dart';
+import 'package:hurry_math/algorithms/exercise_generator.dart';
 import 'package:hurry_math/models/question.dart';
 
 class Exercise {
