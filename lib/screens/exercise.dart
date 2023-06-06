@@ -124,7 +124,7 @@ class _QuestionMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      questionIndex % 4 == 0 && questionIndex > 0
+      (questionIndex + 1) % 5 == 0
           ? 'Q${(questionIndex + 1).toString().padLeft(2, '0')}'
           : '',
       style: TextStyle(
