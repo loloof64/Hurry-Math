@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:hurry_math/algorithms/simple_exercise_generator.dart';
 import 'package:hurry_math/models/question.dart';
 
@@ -20,7 +22,7 @@ class Exercise {
       questionsList.where((question) => question.isCorrectedAnswered).length;
 
   int get score {
-    return correctlyAnsweredCount * 100 - timeSpentDeciSeconds;
+    return max(correctlyAnsweredCount * 100 - timeSpentDeciSeconds, 0);
   }
 
   Duration get spentTime => Duration(milliseconds: timeSpentDeciSeconds * 100);
