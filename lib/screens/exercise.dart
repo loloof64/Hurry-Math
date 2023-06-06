@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hurry_math/providers/exercice.dart';
 
@@ -56,8 +55,11 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                         for (final question in exercise.questionsList)
                           LayoutBuilder(
                             builder: (ctx2, constraints) {
-                              return question.getRepresentation(
-                                constraints.biggest.width * 0.12,
+                              return SizedBox(
+                                width: double.infinity,
+                                child: question.getRepresentation(
+                                  constraints.biggest.width * 0.12,
+                                ),
                               );
                             },
                           ),
@@ -71,6 +73,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                         Expanded(
                           child: TextFormField(
                             onEditingComplete: _answerQuestion,
+                            autofocus: true,
                             controller: _answerController,
                             keyboardType: TextInputType.number,
                             autocorrect: false,

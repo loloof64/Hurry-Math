@@ -81,6 +81,7 @@ class Question {
     Color replacementColor,
   ) {
     return RichText(
+      softWrap: false,
       text: TextSpan(
         text: '$operand_1 ${operatorsLabels[operator]} $operand_2 = ',
         style: TextStyle(
@@ -106,6 +107,7 @@ class Question {
     Color replacementColor,
   ) {
     return RichText(
+      softWrap: false,
       text: TextSpan(
         text: replacement,
         style: TextStyle(
@@ -131,6 +133,7 @@ class Question {
     Color replacementColor,
   ) {
     return RichText(
+      softWrap: false,
       text: TextSpan(
         text: '$operand_1 ${operatorsLabels[operator]} ',
         style: TextStyle(
@@ -159,13 +162,11 @@ class Question {
 
   @override
   String toString() {
-    return 'Question('
-        'operand_1 = $operand_1,'
-        ' operand_2 = $operand_2,'
-        ' operator = $operator,'
-        ' result = $result,'
-        ' expectedAnswer = $expectedAnswer'
-        ')';
+    final op1 = operand_1 ?? '?';
+    final op2 = operand_2 ?? '?';
+    final res = result ?? '?';
+    final optr = operatorsLabels[operator];
+    return 'Question($op1 $optr $op2 = $res {$userAnswer})';
   }
 
   final int? operand_1;
