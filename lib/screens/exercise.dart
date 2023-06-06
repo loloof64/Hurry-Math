@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hurry_math/providers/exercice.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ExerciseScreen extends StatelessWidget {
   const ExerciseScreen({super.key});
@@ -26,17 +27,22 @@ class _ExerciceWidget extends ConsumerStatefulWidget {
 }
 
 class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
-  final _scrollController = ScrollController();
+  final ItemScrollController _itemScrollController = ItemScrollController();
+  final ScrollOffsetController _scrollOffsetController =
+      ScrollOffsetController();
+  final ItemPositionsListener _itemPositionsListener =
+      ItemPositionsListener.create();
+  final ScrollOffsetListener _scrollOffsetListener =
+      ScrollOffsetListener.create();
 
-  void _answerQuestion(String text, double fontSize) {
+  void _answerQuestion(String text) {
     final enteredAnswer = int.tryParse(text);
-    final offsetPerQuestion = fontSize + 2;
     final currentQuestionIndex = ref.read(exerciseProvider)!.currentIndex;
     final isANumber = enteredAnswer != null;
     if (isANumber) {
       ref.read(exerciseProvider.notifier).answerCurrentQuestion(enteredAnswer);
-      _scrollController.animateTo(
-        offsetPerQuestion * currentQuestionIndex,
+      _itemScrollController.scrollTo(
+        index: currentQuestionIndex,
         duration: const Duration(
           milliseconds: 150,
         ),
@@ -48,7 +54,6 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
   @override
   Widget build(BuildContext context) {
     final exercise = ref.watch(exerciseProvider);
-    final fontSize = MediaQuery.of(context).size.width * 0.12;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -60,38 +65,44 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
               children: [
                 Flexible(
                   flex: 9,
-                  child: ListView.builder(
-                    controller: _scrollController,
+                  child: ScrollablePositionedList.builder(
                     physics: const NeverScrollableScrollPhysics(),
+                    itemScrollController: _itemScrollController,
+                    scrollOffsetController: _scrollOffsetController,
+                    itemPositionsListener: _itemPositionsListener,
+                    scrollOffsetListener: _scrollOffsetListener,
                     itemCount: exercise.questionsList.length,
                     itemBuilder: (ctx, index) {
                       final question = exercise.questionsList[index];
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            fit: FlexFit.tight,
-                            child: _QuestionMarker(
-                              questionIndex: index,
-                              fontSize: fontSize,
+                      return LayoutBuilder(builder: (ctx, constraints) {
+                        final fontSize = constraints.biggest.width * 0.12;
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              fit: FlexFit.tight,
+                              child: _QuestionMarker(
+                                questionIndex: index,
+                                fontSize: fontSize,
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            flex: 3,
-                            child: question.getRepresentation(
-                              fontSize,
+                            Flexible(
+                              flex: 3,
+                              child: question.getRepresentation(
+                                fontSize,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
+                          ],
+                        );
+                      });
                     },
                   ),
                 ),
                 Flexible(
                   flex: 1,
                   child: _AnswerInput(
-                    onAnswerQuestion: (text) => _answerQuestion(text, fontSize),
+                    onAnswerQuestion: (text) => _answerQuestion(text),
                   ),
                 )
               ],
