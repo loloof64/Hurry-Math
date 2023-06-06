@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hurry_math/models/question.dart';
 import 'package:hurry_math/providers/exercice.dart';
 
 class ExerciseScreen extends StatelessWidget {
@@ -37,6 +38,9 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
   @override
   Widget build(BuildContext context) {
     final exercise = ref.watch(exerciseProvider);
+    final currentQuestionIndex = exercise?.currentIndex;
+
+    const lineSpacing = 100.0;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -48,41 +52,43 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
               children: [
                 Flexible(
                   flex: 9,
-                  child: Wrap(
-                    clipBehavior: Clip.hardEdge,
-                    children: [
-                      for (final (index, question)
-                          in exercise.questionsList.indexed)
-                        LayoutBuilder(
-                          builder: (ctx2, constraints) {
-                            final fontSize = constraints.biggest.width * 0.12;
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  fit: FlexFit.tight,
-                                  child: _QuestionMarker(
-                                    questionIndex: index,
-                                    fontSize: fontSize,
-                                  ),
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: exercise.questionsList.length,
+                    itemBuilder: (ctx, index) {
+                      final question = exercise.questionsList[index];
+                      return LayoutBuilder(
+                        builder: (ctx2, constraints) {
+                          final fontSize = constraints.biggest.width * 0.12;
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                fit: FlexFit.tight,
+                                child: _QuestionMarker(
+                                  questionIndex: index,
+                                  fontSize: fontSize,
                                 ),
-                                Flexible(
-                                  flex: 3,
-                                  child: question.getRepresentation(
-                                    fontSize,
-                                  ),
+                              ),
+                              Flexible(
+                                flex: 3,
+                                child: question.getRepresentation(
+                                  fontSize,
                                 ),
-                              ],
-                            );
-                          },
-                        ),
-                    ],
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
                 Flexible(
                   flex: 1,
-                  child: _AnswerInput(onAnswerQuestion: _answerQuestion),
+                  child: _AnswerInput(
+                    onAnswerQuestion: _answerQuestion,
+                  ),
                 )
               ],
             ),
