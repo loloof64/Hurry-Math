@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hurry_math/providers/exercice.dart';
+import 'package:hurry_math/screens/score.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ExerciseScreen extends StatelessWidget {
@@ -41,13 +42,22 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
     final isANumber = enteredAnswer != null;
     if (isANumber) {
       ref.read(exerciseProvider.notifier).answerCurrentQuestion(enteredAnswer);
-      _itemScrollController.scrollTo(
-        index: currentQuestionIndex,
-        duration: const Duration(
-          milliseconds: 150,
-        ),
-        curve: Curves.fastOutSlowIn,
-      );
+      final isOver = ref.read(exerciseProvider)!.isOver;
+      if (isOver) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (ctx) => const ScoreScreen(),
+          ),
+        );
+      } else {
+        _itemScrollController.scrollTo(
+          index: currentQuestionIndex,
+          duration: const Duration(
+            milliseconds: 150,
+          ),
+          curve: Curves.fastOutSlowIn,
+        );
+      }
     }
   }
 

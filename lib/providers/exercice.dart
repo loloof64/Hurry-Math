@@ -11,6 +11,8 @@ class ExerciceNotifier extends StateNotifier<Exercise?> {
   void answerCurrentQuestion(int userAnswer) {
     state = state?.answerCurrentQuestion(userAnswer);
   }
+
+  bool get isOver => state?.isOver ?? true;
 }
 
 final exerciseProvider = StateNotifierProvider<ExerciceNotifier, Exercise?>(

@@ -8,8 +8,13 @@ class Exercise {
 
   Exercise.newSimpleExercise() : questionsList = generateSimpleExercise();
 
+  bool get isOver => currentIndex >= questionsList.length || currentIndex == -1;
+
   int get currentIndex =>
       questionsList.indexWhere((question) => !question.answered);
+
+  int get correctlyAnsweredCount =>
+      questionsList.where((question) => question.isCorrectedAnswered).length;
 
   Exercise answerCurrentQuestion(int userAnswer) {
     final interestIndex = currentIndex;

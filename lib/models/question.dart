@@ -38,6 +38,8 @@ class Question {
     userAnswer = answer;
   }
 
+  bool get isCorrectedAnswered => userAnswer == expectedAnswer;
+
   bool get answered => userAnswer != null;
 
   RichText getRepresentation(double fontSize) {
