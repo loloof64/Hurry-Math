@@ -52,14 +52,36 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     child: Wrap(
                       clipBehavior: Clip.hardEdge,
                       children: [
-                        for (final question in exercise.questionsList)
+                        for (final (index, question)
+                            in exercise.questionsList.indexed)
                           LayoutBuilder(
                             builder: (ctx2, constraints) {
-                              return SizedBox(
-                                width: double.infinity,
-                                child: question.getRepresentation(
-                                  constraints.biggest.width * 0.12,
-                                ),
+                              final fontSize = constraints.biggest.width * 0.12;
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      index % 4 == 0 && index > 0
+                                          ? 'Q${(index + 1).toString().padLeft(2, '0')}'
+                                          : '',
+                                      style: TextStyle(
+                                        fontSize: fontSize,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 3,
+                                    child: question.getRepresentation(
+                                      fontSize,
+                                    ),
+                                  ),
+                                ],
                               );
                             },
                           ),
