@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hurry_math/providers/exercice.dart';
-import 'package:uuid/uuid.dart';
-
-const _kUuid = Uuid();
 
 class ExerciseScreen extends StatelessWidget {
   const ExerciseScreen({super.key});
@@ -22,7 +19,7 @@ class ExerciseScreen extends StatelessWidget {
 }
 
 class _ExerciceWidget extends ConsumerStatefulWidget {
-  const _ExerciceWidget({super.key});
+  const _ExerciceWidget({Key? key}) : super(key: key);
 
   @override
   ConsumerState<_ExerciceWidget> createState() => __ExerciceWidgetState();
@@ -95,10 +92,10 @@ class __ExerciceWidgetState extends ConsumerState<_ExerciceWidget> {
 
 class _QuestionMarker extends StatelessWidget {
   const _QuestionMarker({
-    super.key,
+    Key? key,
     required this.questionIndex,
     required this.fontSize,
-  });
+  }) : super(key: key);
 
   final int questionIndex;
   final double fontSize;
@@ -119,9 +116,9 @@ class _QuestionMarker extends StatelessWidget {
 
 class _AnswerInput extends StatefulWidget {
   const _AnswerInput({
-    super.key,
+    Key? key,
     required this.onAnswerQuestion,
-  });
+  }) : super(key: key);
 
   final void Function(String input) onAnswerQuestion;
 
